@@ -1,0 +1,11 @@
+name = "COMClient"
+uuid = "8b2a3d4e-5f6a-4b7c-9d8e-0a1b2c3d4e5f"
+authors = ["COMClient.jl contributors"]
+version = "0.1.0"
+
+[deps]
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
+
+[compat]
+Dates = "1"
+julia = "1.10"

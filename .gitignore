@@ -1,0 +1,19 @@
+# Local AI-agent tooling
+.agents/
+
+# Julia generated files
+*.cov
+*.mem
+*.ji
+coverage/
+deps/deps.jl
+docs/build/
+
+# Local environments and editor files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Keep the repository suitable for a library package.
+Manifest.toml
