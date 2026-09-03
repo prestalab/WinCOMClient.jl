@@ -74,7 +74,7 @@ Use `close(object)` for deterministic release of an owned `IDispatch` reference.
 
 ## Limitations
 
-- Windows x64 only.
+- Functionality requires Windows x64. On other platforms the package still imports (required by registry CI, which runs on Linux), but every COM entry point throws a `WinCOMClient.jl supports Windows only` error.
 - COM callbacks and connection points are not implemented.
 - Remote DCOM is not implemented.
 - SAFEARRAY support is currently limited to one and two dimensions.

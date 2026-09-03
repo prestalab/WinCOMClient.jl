@@ -7,7 +7,7 @@ using Aqua
 using WinCOMClient
 using Test
 
-    @testset "WinCOMClient.jl" begin
+@testset "WinCOMClient.jl" begin
     @testset "Package quality" begin
         Aqua.test_all(WinCOMClient)
     end
