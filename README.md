@@ -1,4 +1,4 @@
-# COMClient.jl
+# WinCOMClient.jl
 
 A lightweight, native Windows COM Automation client for Julia. It calls `ole32` and `oleaut32` directly and does not depend on Python.
 
@@ -14,26 +14,26 @@ A lightweight, native Windows COM Automation client for Julia. It calls `ole32` 
 
 ```julia
 using Pkg
-Pkg.add("COMClient")
+Pkg.add("WinCOMClient")
 ```
 
 Until the first registry release becomes available, install directly from GitHub:
 
 ```julia
-Pkg.add(url="https://github.com/prestalab/COMClient.jl.git")
+Pkg.add(url="https://github.com/prestalab/WinCOMClient.jl.git")
 ```
 
 For local development:
 
 ```julia
 using Pkg
-Pkg.develop(path=raw"C:\projects\COMClient.jl")
+Pkg.develop(path=raw"C:\projects\WinCOMClient.jl")
 ```
 
 ## Usage
 
 ```julia
-using COMClient
+using WinCOMClient
 
 excel = Dispatch("Excel.Application")
 try
@@ -93,4 +93,4 @@ The integration tests use `Scripting.FileSystemObject`; Excel tests run only whe
 
 ## License
 
-COMClient.jl is available under the MIT License. See [`LICENSE`](LICENSE).
+WinCOMClient.jl is available under the MIT License. See [`LICENSE`](LICENSE).

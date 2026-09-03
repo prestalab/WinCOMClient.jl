@@ -1,15 +1,15 @@
-# test/runtests.jl — smoke test for COMClient.jl
+# test/runtests.jl — smoke test for WinCOMClient.jl
 # Uses only the Test stdlib. Two paths:
 # 1. Excel (if installed) — full end-to-end automation
 # 2. Scripting.FileSystemObject (always on Windows) — dynamic dispatch surface
 
 using Aqua
-using COMClient
+using WinCOMClient
 using Test
 
-@testset "COMClient.jl" begin
+    @testset "WinCOMClient.jl" begin
     @testset "Package quality" begin
-        Aqua.test_all(COMClient)
+        Aqua.test_all(WinCOMClient)
     end
     @testset "VARIANT scalar conversions" begin
         for x in (
@@ -27,10 +27,10 @@ using Test
             nothing,
             missing,
         )
-            variant = Ref{COMClient.VARIANT}()
-            COMClient.to_variant(x, variant)
-            @test isequal(COMClient.from_variant(variant[]), x)
-            COMClient.VariantClear(variant)
+            variant = Ref{WinCOMClient.VARIANT}()
+            WinCOMClient.to_variant(x, variant)
+            @test isequal(WinCOMClient.from_variant(variant[]), x)
+            WinCOMClient.VariantClear(variant)
         end
     end
 

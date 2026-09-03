@@ -10,6 +10,22 @@ permissions:
   contents: read
 
 jobs:
+  # Verify that the package loads on Linux (AutoMerge runs on ubuntu-latest)
+  load:
+    name: Package load on Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: julia-actions/setup-julia@v3
+        with:
+          version: '1'
+      - run: |
+          julia --project=. -e '
+            import Pkg; Pkg.instantiate()
+            using WinCOMClient
+            @info "import succeeded on $(Sys.KERNEL)"
+          '
+
   test:
     name: Julia ${{ matrix.julia-version }} on Windows
     runs-on: windows-latest

@@ -1,6 +1,6 @@
 # Contributing
 
-Contributions are welcome. COMClient.jl is intentionally focused on native Windows COM Automation through `IDispatch`; callbacks and remote DCOM are outside the current scope.
+Contributions are welcome. WinCOMClient.jl is intentionally focused on native Windows COM Automation through `IDispatch`; callbacks and remote DCOM are outside the current scope.
 
 ## Development
 

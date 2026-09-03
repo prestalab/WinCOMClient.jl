@@ -1,4 +1,4 @@
-# COMClient.jl — Native Julia COM client (dynamic dispatch)
+# WinCOMClient.jl — Native Julia COM client (dynamic dispatch)
 #
 # Port of pywin32 win32com.client dynamic dispatch path to Julia via ccall
 # to ole32/oleaut32. No Python dependency. Windows x64 only.
@@ -18,7 +18,7 @@
 # (where bare obj.X reads); it's the unavoidable consequence of Julia lacking
 # Python's __getattr__+__call__ duality.
 
-module COMClient
+module WinCOMClient
 
 using Dates
 
@@ -31,9 +31,15 @@ include("variant.jl")
 # ---------------------------------------------------------------------------
 const _com_inited = Ref{Bool}(false)
 
+@inline function _require_windows()
+    Sys.iswindows() || error("WinCOMClient.jl supports Windows only")
+    Sys.WORD_SIZE == 64 || error("WinCOMClient.jl supports 64-bit Windows only")
+    return nothing
+end
+
 function __init__()
-    Sys.iswindows() || error("COMClient.jl supports Windows only")
-    Sys.WORD_SIZE == 64 || error("COMClient.jl supports 64-bit Windows only")
+    Sys.iswindows() || return nothing
+    _require_windows()
     if !_com_inited[]
         hr = CoInitializeEx(C_NULL, COINIT_MULTITHREADED)
         if hr == S_OK || hr == S_FALSE || hr == RPC_E_CHANGED_MODE
@@ -51,9 +57,10 @@ end
 """
     CoInitialize()
 
-Initialize COM for the current process if COMClient has not initialized it already.
+Initialize COM for the current process if WinCOMClient has not initialized it already.
 """
 function CoInitialize()
+    _require_windows()
     if !_com_inited[]
         __init__()
     end
@@ -65,7 +72,7 @@ end
 # ---------------------------------------------------------------------------
 
 """
-    Dispatch(source, [name]; clsctx=COMClient.CLSCTX_SERVER)
+    Dispatch(source, [name]; clsctx=WinCOMClient.CLSCTX_SERVER)
 
 Create or attach to a COM Automation object and return an owned dynamic `Dispatch`
 wrapper. `source` may be a ProgID string, CLSID, existing wrapper, or `IDispatch`
@@ -74,6 +81,7 @@ pointer. Call `close` when deterministic release is required.
 function Dispatch(
     x, name::Union{Nothing, AbstractString}=nothing; clsctx::UInt32=CLSCTX_SERVER
 )
+    _require_windows()
     if x isa Dispatch
         return x
     elseif x isa AbstractString
@@ -107,10 +115,11 @@ function DispatchEx(
     clsctx::Union{Nothing, UInt32}=nothing,
     name::Union{Nothing, AbstractString}=nothing,
 )
+    _require_windows()
     if machine !== nothing
         throw(
             ErrorException(
-                "COMClient: remote DCOM (machine=...) not supported in minimal scope"
+                "WinCOMClient: remote DCOM (machine=...) not supported in minimal scope"
             ),
         )
     end
@@ -125,6 +134,7 @@ function GetObject(
     class::Union{Nothing, AbstractString}=nothing;
     clsctx::UInt32=CLSCTX_ALL,
 )
+    _require_windows()
     if pathname === nothing && class === nothing
         throw(ArgumentError("GetObject: specify pathname or class"))
     end
@@ -139,11 +149,12 @@ function GetObject(
 end
 
 """
-    GetActiveObject(class; clsctx=COMClient.CLSCTX_ALL)
+    GetActiveObject(class; clsctx=WinCOMClient.CLSCTX_ALL)
 
 Attach to a running COM object identified by ProgID or CLSID.
 """
 function GetActiveObject(class; clsctx::UInt32=CLSCTX_ALL)
+    _require_windows()
     cls = class isa AbstractString ? progid_to_clsid(class) : class
     p = get_active_idispatch(cls)
     if p == C_NULL
@@ -153,11 +164,12 @@ function GetActiveObject(class; clsctx::UInt32=CLSCTX_ALL)
 end
 
 """
-    Moniker(pathname; clsctx=COMClient.CLSCTX_ALL)
+    Moniker(pathname; clsctx=WinCOMClient.CLSCTX_ALL)
 
 Bind a COM display-name moniker and return its `IDispatch` wrapper.
 """
 function Moniker(pathname::AbstractString; clsctx::UInt32=CLSCTX_ALL)
+    _require_windows()
     p = moniker_bind(pathname)
     return wrap_dispatch(p, String(pathname))
 end
@@ -168,4 +180,4 @@ end
 export Dispatch, DispatchEx, GetObject, GetActiveObject, Moniker
 export CoInitialize, COMException, COMMember, value, ptr
 
-end # module COMClient
+end # module WinCOMClient
