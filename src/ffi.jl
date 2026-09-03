@@ -8,7 +8,7 @@
 const HRESULT = Clong
 const S_OK = Clong(0)
 const S_FALSE = Clong(1)
-const RPC_E_CHANGED_MODE = reinterpret(Clong, UInt32(0x80010106))
+const RPC_E_CHANGED_MODE = Clong(reinterpret(Int32, UInt32(0x80010106)))
 
 # ---------------------------------------------------------------------------
 # CLSCTX
