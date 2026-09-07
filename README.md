@@ -17,12 +17,6 @@ using Pkg
 Pkg.add("WinCOMClient")
 ```
 
-Until the first registry release becomes available, install directly from GitHub:
-
-```julia
-Pkg.add(url="https://github.com/prestalab/WinCOMClient.jl.git")
-```
-
 For local development:
 
 ```julia
